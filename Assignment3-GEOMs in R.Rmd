@@ -1,0 +1,436 @@
+---
+title: "GEOMs Assignment"
+author: "Josephine"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.width = 12,
+  fig.height = 7,
+  out.width = "100%",
+  dpi = 300
+)
+
+```
+
+# 1. Introduction
+
+This assignment demonstrates 15 different `ggplot2` geoms using three R datasets: `diamonds`, `gapminder`, and `economics`. The graphs explore distributions, comparisons, relationships, and trends.
+
+The `diamonds` dataset contains diamond characteristics and prices. `gapminder` contains country-level population, life expectancy, and GDP per capita over time. `economics` contains US economic indicators over time.
+
+# 2. Packages and data
+
+```{r setup, message=FALSE, warning=FALSE}
+
+library(ggplot2)
+library(gapminder)
+library(dplyr)
+library(knitr)
+
+data("diamonds", package = "ggplot2")
+data("gapminder", package = "gapminder")
+data("economics", package = "ggplot2")
+
+# Inspect the datasets
+dim(diamonds)
+dim(gapminder)
+dim(economics)
+
+head(diamonds)
+head(gapminder)
+head(economics)
+```
+```{r setup, message=FALSE, warning=FALSE}
+
+head(diamonds)
+
+```
+
+
+
+```{r setup, message=FALSE, warning=FALSE}
+
+
+head(gapminder)
+
+```
+
+
+
+
+
+
+```{r setup, message=FALSE, warning=FALSE}
+head(economics)
+```
+
+
+
+# 3. Graphs using the diamonds dataset
+
+## Graph 1: geom_point(): Scatterplot 
+
+#Question: Is diamond carat weight related to price?
+
+```{r graph1, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(
+    title = "Relationship Between Diamond Weight and Price",
+    x = "Carat",
+    y = "Price (US dollars)"
+  ) +
+  theme_minimal()
+```
+
+**Interpretation:** The scatter plot shows a strong positive relationship between diamond weight (carat) and price. The red regression line indicates that diamond prices generally increase as carat weight increases. However, the points are widely scattered around the line, particularly for heavier diamonds, showing considerable price variation. This suggests that other factors, such as cut, colour and clarity, also influence diamond prices. The linear trend also appears less representative at higher carat weights..
+
+**Conclusion:** A scatterplot is useful for examining the direction, form, and strength of a relationship between two numerical variables.
+Diamond weight is an important predictor of diamond price, as heavier diamonds generally cost more. However, carat weight alone cannot fully explain price differences. Other diamond characteristics should also be considered when predicting diamond prices.
+
+
+## Graph 2:geom_boxplot(): Boxplot 
+
+**Question:** How does diamond price vary across cut categories?
+
+```{r graph2, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = cut, y = price)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(
+    title = "Diamond Price Distribution by Cut Quality",
+    x = "Diamond Cut Quality",
+    y = "Price (US dollars)"
+  ) +
+  theme_minimal()
+```
+
+**Interpretation:** The boxplot shows that diamond prices vary across the five cut-quality categories. Fair and Premium diamonds have the highest median prices, while Ideal diamonds have the lowest median price. All categories show considerable price variation and several high-price outliers. The overlapping distributions suggest that cut quality alone does not explain diamond prices.
+
+**Conclusion:** Diamond prices differ across cut-quality categories, but better cut quality does not necessarily mean a higher price. Other factors, such as carat weight, colour and clarity, also influence diamond prices.
+
+
+## Graph 3: geom_histogram(): Histogram  
+
+**Question:** What is the distribution of diamond prices?
+
+```{r graph3, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = price)) +
+  geom_histogram(fill = "steelblue", color = "white", bins = 30) +
+  geom_vline(
+    xintercept = median(diamonds$price),
+    color = "red",
+    linewidth = 1
+  ) +
+  labs(
+    title = "Distribution of Diamond Prices",
+    x = "Price (US dollars)",
+    y = "Number of diamonds"
+  ) +
+  theme_minimal()
+```
+
+**Interpretation:** The histogram shows that diamond prices have a positively skewed (right-skewed) distribution. Most diamonds have relatively low prices, with the highest concentration occurring around $500–$1,000. As prices increase, the number of diamonds generally decreases, and only a small proportion cost more than $10,000. The red vertical line represents the median price, approximately $2,400. The long right tail indicates the presence of a few very expensive diamonds.
+
+
+**Conclusion:** Diamond prices are not normally distributed. Most diamonds are relatively affordable, while a small number have very high prices. The median is therefore a useful measure of central tendency for this dataset.
+
+
+## Graph 4: geom_density():Density plot 
+
+**Question:** How is carat weight distributed?
+
+```{r graph4, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = carat)) +
+  geom_density(fill = "skyblue", alpha = 0.5) +
+  labs(title = "Density Distribution of Diamond Carat Weight",
+       x = "Carat", y = "Density") +
+  theme_minimal()
+```
+
+**Interpretation:** The graph displays the estimated probability density distribution of diamond carat weights, ranging from 0 to 5 carats. The distribution is highly right-skewed, indicating that most diamonds weigh less than 2 carats, with the highest concentration between 0.3 and 0.5 carats. Several distinct peaks can also be observed around 0.3, 0.5, 0.7, 1.0, 1.5 and 2.0 carats, suggesting that diamonds are frequently sold in these popular weight categories
+
+**Conclusion:** The diamond carat weights are influenced by market preferences and economic considerations rather than following a purely continuous natural distribution. Diamond cutters often aim for popular standard weight categories, particularly the 1.0-carat threshold, resulting in a distribution with multiple peaks and a strong right skew.
+
+
+## Graph 5: geom_bar(): Bar chart 
+
+**Question:** How many diamonds are recorded in each cut category?
+
+```{r graph5, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = cut)) +
+  geom_bar() +
+  labs(title = "Number of Diamonds by Cut Category",
+       x = "Cut quality", y = "Number of diamonds") +
+  theme_minimal()
+```
+
+**Interpretation:** The bar chart displays the frequency of diamonds categorized by their cut quality, ordered from lowest quality ("Fair") to highest quality ("Ideal"). There is a clear upward trend in count as cut quality improves: "Ideal" is the most common category (over 21,000 diamonds), followed by "Premium" (~13,500), "Very Good" (~12,000), "Good" (~5,000), and "Fair" (under 2,000)
+
+**Conclusion:** `geom_bar()` is appropriate when the dataset contains individual observations and you want ggplot2 to count them automatically.
+
+
+## Graph 6: geom_col() : Column chart 
+
+**Question:** What is the average price for each cut category?
+
+```{r graph6, fig.width=8, fig.height=5}
+cut_means <- diamonds %>%
+  group_by(cut) %>%
+  summarise(mean_price = mean(price), .groups = "drop")
+
+ggplot(cut_means, aes(x = cut, y = mean_price)) +
+  geom_col() +
+  labs(title = "Average Diamond Price by Cut",
+       x = "Cut quality", y = "Average price (US dollars)") +
+  theme_minimal()
+```
+
+**Interpretation:** The bar chart shows the average price (in US dollars) of diamonds across five cut qualities: Fair, Good, Very Good, Premium, and Ideal. Contrary to  expectations, average price does not strictly increase with cut quality:   Premium cuts have the highest average price (around $4,600).   Fair cuts have the second-highest average price (around $4,350).   Very Good and Good cuts average near $4,000 and $3,900 respectively.   Ideal cuts have the lowest average price (around $3,450).
+
+**Conclusion:** `geom_col()` is suitable when the values have already been calculated before plotting.
+
+
+## Graph 7:  geom_violin() : Violin plot
+
+**Question:** How does the shape of the price distribution differ by cut?
+
+```{r graph7, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = cut, y = price)) +
+  geom_violin(trim = FALSE) +
+  labs(title = "Diamond Price Distributions by Cut",
+       x = "Cut quality", y = "Price (US dollars)") +
+  theme_minimal()
+```
+
+**Interpretation:**The graph shows that diamond carat weights are concentrated around popular market thresholds, particularly 0.3, 0.5, 0.7, 1.0, 1.5 and 2.0 carats. Most diamonds across all cut categories are priced below $5,000, with distributions strongly skewed towards higher prices. Interestingly, Fair-cut diamonds have a higher average price than Ideal-cut diamonds, possibly because of differences in carat weight. This suggests that diamond weight plays an important role in determining price, alongside cut quality.
+
+**Conclusion:** Violin plots show distribution shape and are useful alongside boxplots when comparing groups.
+
+
+## Graph 8: Jitter plot — `geom_jitter()`
+
+**Question:** How are individual diamond prices spread across cut categories?
+
+```{r graph8, fig.width=8, fig.height=5}
+ggplot(diamonds, aes(x = cut, y = price)) +
+  geom_jitter(width = 0.2, alpha = 0.15) +
+  labs(title = "Individual Diamond Prices by Cut",
+       x = "Cut quality", y = "Price (US dollars)") +
+  theme_minimal()
+```
+
+**Interpretation:** The jitter plot shows that diamond density generally increases across the cut-quality categories, with more observations appearing in the better-cut categories. High-priced diamonds, reaching approximately $18,000–$20,000, are present in all five categories, indicating that even Fair-cut diamonds can have high prices. Most diamonds across all categories are concentrated below $5,000, while fewer observations appear at higher price levels. The considerable overlap and wide price variation across categories suggest that cut quality alone does not determine diamond prices, as other factors, particularly carat weight, also contribute significantly to their value.
+
+**Conclusion:** Jitter plots reveal individual observations that may be hidden when many records overlap
+
+
+# Graphs using the gapminder dataset
+
+```{r}
+
+head(gapminder)
+
+```
+
+## Graph 9: geom_line(): Line graph 
+
+**Question:** How has life expectancy changed over time across continents?
+
+```{r graph9, fig.width=8, fig.height=5}
+continent_life <- gapminder %>%
+  group_by(continent, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp), .groups = "drop")
+
+ggplot(continent_life,
+       aes(x = year, y = mean_lifeExp, colour = continent,
+           group = continent)) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  labs(title = "Average Life Expectancy by Continent Over Time",
+       x = "Year", y = "Mean life expectancy (years)",
+       colour = "Continent") +
+  theme_minimal()
+```
+
+**Interpretation:** The line chart illustrates an overall increase in average life expectancy across all five continents between 1952 and 2007, reflecting improvements in healthcare, sanitation and living conditions. Europe and Oceania consistently recorded the highest life expectancy, increasing from approximately 65–70 years to around 80 years or above by 2007. Asia experienced the most substantial improvement, gradually narrowing the gap with Europe and the Americas. In contrast, Africa recorded steady progress until the late 1980s, when life expectancy exceeded 53 years, followed by a period of slower growth and stagnation during the 1990s and early 2000s. This highlights the continued differences in health and living standards between Africa and other continents.
+
+**Conclusion:** Line graphs are appropriate for showing trends in measurements recorded over time.
+
+
+## Graph 10: geom_smooth():Smooth trend 
+
+**Question:** What is the relationship between GDP per capita and life expectancy?
+
+```{r graph10, fig.width=8, fig.height=5}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "loess", se = TRUE) +
+  scale_x_log10() +
+  labs(title = "GDP per Capita and Life Expectancy",
+       x = "GDP per capita (log scale)",
+       y = "Life expectancy (years)") +
+  theme_minimal()
+```
+
+**Interpretation:** The graph illustrates a strong positive but non-linear relationship between GDP per capita (measured on a logarithmic scale) and life expectancy. At lower income levels, increases in GDP per capita are associated with substantial improvements in life expectancy, likely reflecting better access to healthcare, sanitation and nutrition. However, as income rises beyond approximately $10,000, the rate of improvement gradually slows, indicating diminishing gains in life expectancy. The trend eventually levels off at around 75–80 years, suggesting that although economic growth is strongly associated with better health outcomes in lower-income countries, additional increases in wealth have a smaller association with longevity in high-income countries.
+
+**Conclusion:** `geom_smooth()` helps reveal an overall relationship that may not be obvious from individual points. Association does not prove that higher GDP causes longer life expectancy.
+
+
+## Graph 11: geom_area() : Area graph 
+
+**Question:** How has the combined population of each continent changed over time?
+
+```{r graph11, fig.width=8, fig.height=5}
+continent_population <- gapminder %>%
+  group_by(continent, year) %>%
+  summarise(population = sum(pop), .groups = "drop")
+
+ggplot(continent_population,
+       aes(x = year, y = population, fill = continent)) +
+  geom_area() +
+  labs(title = "Total Population by Continent Over Time",
+       x = "Year", y = "Population", fill = "Continent") +
+  theme_minimal()
+```
+
+**Interpretation:** The stacked area chart shows a significant and continuous increase in the global population, rising from less than 2.5 billion in 1952 to more than 6 billion in 2007. Asia contributes the largest share of this growth, maintaining its position as the most populated region and accounting for more than half of the world's population. Africa and the Americas also experience considerable population increases, with Africa showing a particularly noticeable rise in its contribution during the later years. However, Europe's population remains relatively stable, resulting in a gradual decline in its share of the global population. Oceania, on the other hand, continues to represent only a very small proportion of the world's total population throughout the period.
+
+**Conclusion:** Area graphs are useful for showing how quantities and their contributions change over time.
+
+
+## Graph 12:geom_freqpoly() :  Frequency polygon 
+
+**Question:** How does GDP per capita vary across continents?
+
+```{r graph12, fig.width=8, fig.height=5}
+ggplot(gapminder,
+       aes(x = gdpPercap, colour = continent)) +
+  geom_freqpoly(bins = 35, linewidth = 0.8) +
+  scale_x_log10() +
+  labs(title = "GDP per Capita Distribution by Continent",
+       x = "GDP per capita (log scale)",
+       y = "Frequency", colour = "Continent") +
+  theme_minimal()
+```
+
+**Interpretation:** The frequency polygon illustrates significant differences in income levels across continents, revealing distinct GDP per capita distributions on a logarithmic scale. Africa's distribution is strongly concentrated in the lowest income range, with the highest frequency occurring below $1,000 per capita and a considerable decline beyond $3,000. Europe, by comparison, shows a higher income distribution, with most observations falling between $10,000 and $30,000 per capita. The Americas display a moderate-to-high income pattern, with most values concentrated between $3,000 and $10,000. Asia has a more diverse distribution, covering a wide range of income levels, from very low values to extremely high levels exceeding $100,000. Oceania records the lowest overall frequency and is mainly represented in the higher GDP per capita ranges
+
+**Conclusion:** Frequency polygons allow distributions for multiple groups to be compared in one graph.
+
+
+
+# Graphs using the economics dataset
+
+```{r }
+head(economics)
+
+```
+
+
+## Graph 13: geom_rug() : Rug plot
+
+**Question:** At which unemployment levels are observations concentrated?
+
+```{r graph13, fig.width=8, fig.height=5}
+ggplot(economics, aes(x = unemploy)) +
+  geom_density(fill = "lightblue", alpha = 0.4) +
+  geom_rug(alpha = 0.25) +
+  labs(title = "Unemployment Distribution with Individual Observations",
+       x = "Number unemployed (thousands)", y = "Density") +
+  theme_minimal()
+```
+
+**Interpretation:** The density plot, together with the rug plot, illustrates the distribution of unemployed individuals (in thousands), showing a single prominent peak and a positive (right) skew. The highest concentration of observations occurs between 7,000 and 8,000 thousand (approximately 7 to 8 million) unemployed people. Most observations are grouped around the central range of 6,000 to 9,000 thousand. A smaller concentration is visible at the lower end, between 3,000 and 5,000 thousand, while the distribution gradually extends toward higher values, reaching approximately 14,000 thousand. These extreme values represent less frequent periods when unemployment levels were particularly high.
+
+**Conclusion:** A rug plot adds information about individual data points to another graph, such as a density plot.
+
+
+## Graph 14: geom_errorbar() : Error-bar chart 
+
+**Question:** How does the average unemployment level differ by decade?
+
+```{r graph14, fig.width=8, fig.height=5}
+economics_decade <- economics %>%
+  mutate(decade = paste0(floor(as.integer(format(date, "%Y")) / 10) * 10,
+                         "s")) %>%
+  group_by(decade) %>%
+  summarise(
+    mean_unemploy = mean(unemploy, na.rm = TRUE),
+    sd_unemploy = sd(unemploy, na.rm = TRUE),
+    n = sum(!is.na(unemploy)),
+    se = sd_unemploy / sqrt(n),
+    lower = mean_unemploy - 1.96 * se,
+    upper = mean_unemploy + 1.96 * se,
+    .groups = "drop"
+  )
+
+ggplot(economics_decade,
+       aes(x = decade, y = mean_unemploy)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+  labs(title = "Mean Unemployment by Decade with Approximate 95% Intervals",
+       x = "Decade", y = "Unemployed (thousands)") +
+  theme_minimal()
+```
+
+**Interpretation:** The bar chart reveals a clear long-term increase in the average number of unemployed individuals across the decades, rising from below 3,000 thousand in the 1960s to more than 12,000 thousand in the 2010s. Unemployment increased sharply between the 1960s and 1980s, reaching approximately 8,300 thousand, before experiencing a slight decline in the 1990s and rising again in the 2000s. The most substantial increase occurred in the 2010s, when average unemployment reached its highest level. The approximate 95% confidence intervals suggest differences in average unemployment across several decades, particularly between the 1960s, 1970s, 1980s, and 2010s. Overall, the chart indicates that unemployment increased considerably over time, despite some temporary declines in particular decades.
+
+**Conclusion:** Error bars communicate uncertainty or variability around summary estimates. Always state what the bars represent.
+
+
+## Graph 15: geom_tile() : Tile heatmap 
+
+**Question:** How do unemployment levels vary by year and month?
+
+```{r graph15, fig.width=9, fig.height=6}
+economics_heat <- economics %>%
+  mutate(
+    year = as.integer(format(date, "%Y")),
+    month = factor(month.abb[as.integer(format(date, "%m"))],
+                   levels = month.abb)
+  ) %>%
+  group_by(year, month) %>%
+  summarise(mean_unemploy = mean(unemploy, na.rm = TRUE),
+            .groups = "drop")
+
+ggplot(economics_heat,
+       aes(x = month, y = year, fill = mean_unemploy)) +
+  geom_tile() +
+  labs(title = "Monthly Unemployment Heatmap",
+       x = "Month", y = "Year", fill = "Unemployed\n(thousands)") +
+  theme_minimal()
+```
+
+**Interpretation:** The monthly unemployment heatmap illustrates changes in the number of unemployed individuals (in thousands) across different months and years. The consistent horizontal color patterns suggest that long-term economic conditions have a greater influence on unemployment levels than seasonal variations within individual years. The gradual transition from dark blue shades in the late 1960s and 1970s to brighter blue tones in later years indicates an overall increase in unemployment over time. Noticeable increases are also observed around the 1982 economic downturn and, more significantly, following the 2008 financial crisis, when unemployment reached nearly 15,000 thousand after 2009. Additionally, the heatmap shows that the dataset covers an incomplete period at both ends, beginning in July 1967 and ending in April 2015
+
+**Conclusion:** Heatmaps make patterns across two categorical or ordered dimensions easier to identify.
+
+
+
+# Overall conclusion
+
+This assignment demonstrates 15 different ggplot2 geoms using three datasets. The `diamonds` dataset was used to examine distributions, group comparisons, and relationships between diamond characteristics. The `gapminder` dataset was used to explore changes in life expectancy, population, and GDP per capita across countries and continents. The `economics` dataset was used to examine unemployment over time.
+
+The exercise shows that no single graph is suitable for every research question. Scatterplots are useful for relationships, boxplots and violin plots for comparing distributions, histograms and density plots for examining numerical variables, and line and area graphs for time trends. Error bars communicate uncertainty, while heatmaps help reveal patterns across two dimensions.
+
+
+# References
+
+- Wickham, H. et al. **ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics.** https://ggplot2.tidyverse.org/
+- Gapminder dataset documentation: https://cran.r-project.org/package=gapminder
+- ggplot2 datasets documentation: https://ggplot2.tidyverse.org/reference/diamonds.html and https://ggplot2.tidyverse.org/reference/economics.html
+
+
+
+
+
+
+
+

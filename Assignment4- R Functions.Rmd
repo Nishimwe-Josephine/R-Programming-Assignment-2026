@@ -1,0 +1,207 @@
+---
+title: "R Functions Assignment"
+author: "Josephine"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## 1.Introduction
+
+What is a function in R?
+
+A function is a reusable block of code designed to perform a specific task. Instead of writing the same code repeatedly, you can use a function whenever you need it.
+
+## 2.Common build in function in R
+
+Common built-in functions in R
+R has many functions that help us analyze and manipulate data.
+Function	Purpose	Example
+1.sum()	Calculates total	sum(c(2, 4, 6))
+2.mean()	Calculates average	mean(c(2, 4, 6))
+3.median()	Finds middle value	median(c(2, 4, 6))
+4.max()	Finds maximum	max(c(2, 4, 6))
+5.min()	Finds minimum	min(c(2, 4, 6))
+6.length()	Counts elements	length(c(2, 4, 6))
+7.sqrt()	Calculates square root	sqrt(25)
+8.round()	Rounds numbers	round(3.456, 2)
+9.sort()	Sorts values	sort(c(5, 2, 8))
+10.abs()	Returns absolute value	abs(-10)
+
+
+## 3.Creating my own functions
+
+Creating a function using the function() keyword
+
+
+## 4. Functions format
+
+```{r function_format, eval=FALSE}
+function_name <- function(arguments) {
+  statements
+  return(result)
+}
+```
+
+## A. Build_in Functions
+
+
+## 1. Calculate the square of a number
+
+```{r square_func, message=FALSE, warning=FALSE}
+square <- function(x) {
+  result <- x^2
+  return(result)
+}
+square(5)
+
+```
+## 2.Applying a function to multiple values
+
+```{r mean_func, message=FALSE, warning=FALSE}
+marks <- c(65, 70, 80, 85, 90)
+mean(marks)
+
+```
+
+
+
+## 3.Maximum calculation
+
+```{r max_func, message=FALSE, warning=FALSE}
+marks <- c(65, 70, 80, 85, 90)
+max(marks)
+
+```
+
+
+## 4.Minimum calculation
+
+```{r min_func, message=FALSE, warning=FALSE}
+marks <- c(65, 70, 80, 85, 90)
+min(marks)
+
+```
+## 5.Sorting
+
+```{r sort_func, message=FALSE, warning=FALSE}
+marks <- c(65, 70, 80, 85, 90)
+sort(marks)
+
+```
+
+
+## B.The user-defined functions
+
+A user-defined function is a function that you create yourself to perform a specific task.
+
+For example, suppose you frequently calculate the average marks of students. Instead of writing mean() every time, you can create your own function to calculate the average.
+
+In R, we use the keyword function() to create a function.
+
+
+```{r function_format, eval=FALSE}
+
+function_name <- function(arguments) {
+  statements
+  return(result)
+}
+
+```
+
+
+## 1. Print the result
+
+
+```{r function_format, eval=FALSE}
+student_marks <- c(60, 70, 80, 90, 100)
+
+calculate_average <- function(marks) {
+  average <- mean(marks)
+  return(average)
+}
+
+result <- calculate_average(student_marks)
+
+print(result)
+
+
+```
+
+## 2.Functions with multiple arguments
+
+```{r function_format, eval=FALSE}
+add_numbers <- function(a, b) {
+  result <- a + b
+  return(result)
+}
+
+add_numbers(20, 30)
+
+
+```
+## 3. Calculate the rectangul area.
+
+
+
+
+```{r function_format, eval=FALSE}
+rectangle_area <- function(length, width) {
+  area <- length * width
+  return(area)
+}
+
+rectangle_area(10, 5)
+
+
+```
+## 4. Functions with default argument values
+
+R allows to assign default values to function arguments.
+
+
+
+```{r function_format, eval=FALSE}
+great_student <- function(name = "Student") {
+  message <- paste("Welcome", name)
+  return(message)
+}
+
+great_student()
+
+```
+
+```{r function_format, eval=FALSE}
+
+great_student("Josephine")
+
+```
+## 5.Calculating discount
+
+```{r function_format, eval=FALSE}
+
+calculate_discount <- function(price, discount) {
+  final_price <- price - discount
+  return(final_price)
+}
+
+# Call the function
+calculate_discount(100, 15)
+
+```
+
+## 5.Calculating total
+
+```{r function_format}
+total <- function(numbers) {
+  final_total <- sum(numbers)
+  return(final_total)
+}
+
+# Call the function
+total(c(100, 15, 85))
+
+```
+
+
+
+

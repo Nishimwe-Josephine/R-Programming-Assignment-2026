@@ -1,0 +1,680 @@
+
+---
+title: "Linear Regression Assignment"
+author: "Josephine"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(readr)
+
+student <- read_csv("D:/Users/josephine.nishimwe_o/Desktop/R Assignments/Student_marks.csv")
+
+```
+
+```{r setup, message=FALSE, warning=FALSE}
+head(student) 
+
+```
+## Renaming the variables for good understanding
+
+```{r setup, message=FALSE, warning=FALSE}
+
+names(student) <- c(
+  "School",
+  "Gender",
+  "Age",
+  "Residence",
+  "Family_Size",
+  "Parent_Status",
+  "Mother_Education",
+  "Father_Education",
+  "Mother_Occupation",
+  "Father_Occupation",
+  "School_Choice_Reason",
+  "Guardian",
+  "Travel_Time",
+  "Study_Time",
+  "Past_Failures",
+  "School_Support",
+  "Family_Support",
+  "Paid_Classes",
+  "Extracurricular_Activities",
+  "Nursery_Attendance",
+  "Higher_Education_Intent",
+  "Internet_Access",
+  "Romantic_Relationship",
+  "Family_Relationship",
+  "Free_Time",
+  "Social_Outings",
+  "Workday_Alcohol",
+  "Weekend_Alcohol",
+  "Health_Status",
+  "School_Absences",
+  "First_Period_Grade",
+  "Second_Period_Grade",
+  "Final_Grade"
+)
+
+
+```
+
+
+```{r}
+names(student)
+```
+
+```{r}
+head(student)
+```
+
+
+```{r}
+str(student)
+```
+## Converting charactors as factors
+
+```{r}
+
+student$School <- as.factor(student$School)
+student$Gender <- as.factor(student$Gender)
+student$Residence <- as.factor(student$Residence)
+student$Family_Size <- as.factor(student$Family_Size)
+student$Parent_Status <- as.factor(student$Parent_Status)
+
+student$Mother_Occupation <- as.factor(student$Mother_Occupation)
+student$Father_Occupation <- as.factor(student$Father_Occupation)
+student$School_Choice_Reason <- as.factor(student$School_Choice_Reason)
+student$Guardian <- as.factor(student$Guardian)
+
+student$School_Support <- as.factor(student$School_Support)
+student$Family_Support <- as.factor(student$Family_Support)
+student$Paid_Classes <- as.factor(student$Paid_Classes)
+student$Extracurricular_Activities <- as.factor(student$Extracurricular_Activities)
+student$Nursery_Attendance <- as.factor(student$Nursery_Attendance)
+student$Higher_Education_Intent <- as.factor(student$Higher_Education_Intent)
+student$Internet_Access <- as.factor(student$Internet_Access)
+student$Romantic_Relationship <- as.factor(student$Romantic_Relationship)
+```
+
+## Does weekly study time influence students' final mathematics grades?
+
+## 1. Simple Linear Regression
+
+# y = b_0 + b_1x 
+
+#Final_Grade = beta_0+ beta_1(Study_Time)+epsilon
+
+
+```{r}
+simple_model <- lm(
+  Final_Grade ~ Study_Time,
+  data = student
+)
+
+summary(simple_model)
+```
+ ## Final_Grade = 9.3283+0.5340(Study_Time)
+
+## 1. Simple Linear  regression interpretation
+
+The simple linear regression analysis was conducted to examine the relationship between students' study time and their final grades. The results indicate a positive relationship, with the regression coefficient showing that a one-unit increase in study time is associated with an average increase of approximately 0.534 points in the final grade. However, this relationship was not statistically significant at the 5% significance level (p = 0.0521). The model's R-squared value was 0.0096, indicating that study time explains only approximately 0.96% of the variation in students' final grades. Therefore, study time alone is a weak predictor of academic performance in this dataset. The findings suggest that other factors may also influence students' final grades, highlighting the importance of conducting multiple linear regression analysis to investigate the combined effects of several explanatory variables.
+
+
+
+## 2.Multiple linear regression
+
+
+```{r}
+multiple_model <- lm(
+  Final_Grade ~ Age + Mother_Education +
+    Father_Education + Study_Time +
+    Past_Failures + School_Absences +
+    Social_Outings + Health_Status +
+    Gender + Internet_Access,
+  data = student
+)
+
+summary(multiple_model)
+```
+
+## Multiple linear regression
+
+Final_ Grade = 13.57376 - 0.23076(Age)+
+               0.48901(Mother_Education)-
+               0.04653(Father_Education)+
+               0.40649(Study_Time)-
+               1.84044(Past_Failures)+
+               0.03844(School_Absences)-
+               0.44044(Social_Outings)-
+               0.17025(Health_Status)+
+               1.35062(GenderM)+
+               0.44466(Internet_Accessyes)
+
+
+## Interpretation of regression coefficients
+Let's examine each variable.
+
+Variable	  Estimate	 p-value	  Interpretation
+Age     	-0.2308	  0.1942	 Each additional year of age is associated with a 0.23-point decrease in final grade,                              but the relationship is not significant.
+Mother Education	0.4890	0.0566	Higher maternal education is associated with higher grades, but the result is not significant at 5%.
+Father Education	-0.0465	0.8537	Very little evidence of an association with final grade.
+Study Time	0.4065	0.1351	    Higher study-time category is associated with a 0.41-point increase, but the relationship is not significant.
+Past Failures	-1.8404	5.54e-09	  Each additional past failure is associated with a decrease of approximately 1.84 grade points. This is statistically significant.
+School Absences	0.0384	0.1616	 Each additional absence is associated with a very small increase in predicted grade, but this is not significant.
+Social Outings	-0.4404	0.0238	Each one-unit increase in social outings is associated with a decrease of approximately 0.44 grade points. This is statistically significant.
+Health Status	-0.1703	0.2727  	A small negative association, but not statistically significant.
+Gender (Male)	1.3506	0.0031	Male students have an estimated 1.35-point higher final grade than female students, holding other variables constant. This is significant.
+Internet Access (Yes)	0.4447	0.4488	Students with internet access have an estimated 0.44-point higher grade than those without access, but the difference is not significant.
+
+## Variables that are statistically significant
+
+### 1.Past_Failures
+### 2.Social Outings
+### 3.GenderM
+
+## Multiple linear regression was conducted to investigate the factors associated with students' final academic grades. The model included age, parental education, study time, past failures, school absences, social outings, health status, gender, and internet access.
+
+The overall regression model was statistically significant (F(10, 384) = 8.863, p < 0.001), indicating that the included predictors collectively explain a significant proportion of the variation in students' final grades. The model recorded an R-squared of 0.1875 and an adjusted R-squared of 0.1664, meaning that it explained approximately 18.75% of the variation in final grades.
+
+Among the explanatory variables, past failures (β = -1.8404, p < 0.001), social outings (β = -0.4404, p = 0.0238), and gender (β = 1.3506, p = 0.0031) were statistically significant at the 5% level. Past failures and social outings had negative associations with final grades, while male students had higher predicted grades than female students, holding the other variables constant. The remaining predictors did not show statistically significant associations at the 5% level.
+
+Compared with the simple linear regression model using study time alone, the multiple regression model demonstrated greater explanatory power. These findings suggest that academic performance is associated with several student characteristics rather than study time alone. Nevertheless, because the model explains only 18.75% of the variation in final grades, additional factors should be investigated to improve understanding of students' academic performance. The results demonstrate associations and should not be interpreted as proof of causal relationships.
+
+
+
+
+```{r}
+install.packages("car")
+library(car)
+
+vif(multiple_model)
+```
+
+## The Variance Inflation Factor (VIF): Multicolinearity test
+
+```{r}
+
+vif(multiple_model)
+```
+
+
+
+## Multicollinearity Test
+
+The Variance Inflation Factor (VIF) was used to assess multicollinearity among the independent variables included in the multiple linear regression model. The results showed that all VIF values ranged from 1.045 to 1.765, which are well below the commonly accepted threshold of 5. The highest VIF value was observed for Mother's Education (1.765), while Health Status had the lowest value (1.045). These findings indicate that there is no serious multicollinearity among the explanatory variables. Therefore, multicollinearity is unlikely to substantially affect the stability and interpretation of the regression coefficients, and the model satisfies this diagnostic criterion.
+
+
+
+
+Interpretation of Multicollinearity (VIF) Results
+Your Variance Inflation Factor (VIF) results are very good. They indicate that there is no serious multicollinearity problem among the independent variables in your multiple linear regression model.
+1. Interpretation of individual VIF values
+Independent variable	VIF	Interpretation
+Age	              1.154	Very low
+Mother Education	1.765	Very low
+Father Education	1.696	Very low
+Study Time	1.169	Very low
+Past Failures	1.185	Very low
+School Absences	1.084	Very low
+Social Outings	1.051	Very low
+Health Status	1.045	Very low
+Gender	1.158	Very low
+Internet Access	1.081	Very low
+
+The highest VIF is Mother Education (1.765), which is still well below the commonly used threshold of 5.
+2. Understanding the VIF values
+You can use these general guidelines:
+VIF value	Interpretation
+Approximately 1	No meaningful multicollinearity
+Between 1 and 5	Generally acceptable
+Above 5	Potential multicollinearity concern
+Above 10	Serious multicollinearity concern
+
+All your predictors have VIF values between 1.045 and 1.765.
+
+This means that the independent variables do not show problematic linear relationships with one another.
+
+
+```{r}
+
+par(mfrow = c(2, 2))
+
+plot(multiple_model)
+```
+
+
+## Step-by-step diagnostic breakdown  of 4 linear regression diagnostic plots:
+
+
+#1.Residuals vs Fitted – linearity and constant variance.
+
+# 2.Normal Q-Q – normality of residuals.
+
+#3.Scale-Location – homoscedasticity.
+
+#$.Residuals vs Leverage – influential observations
+
+
+### 1. Residuals vs Fitted (Linearity)
+
+# horizontal red line around zero with points randomly spread without any distinct patterns : The red line is nearly flat along the zero line, confirming that the relationship between the independent and dependent variables is linear. However, there are notable negative outliers at higher fitted values (around fitted values 11–14).
+
+
+### 2. Normal Q-Q (Normality of Residuals)
+
+## The Points following the dashed 45-degree straight reference line : The majority of the residuals align well with the theoretical line in the center and upper tail. However, the left tail heavy deviation (curving below the dashed line for theoretical quantiles < -1 indicates that the residuals are left-skewed and have heavier-than-normal tails due to low-value outliers (points 141, 200, 209).
+
+
+### 3. Scale-Location : Spread-Location (Homoscedasticity)
+
+## A horizontal red line with points randomly scattered with equal vertical spread across fitted values (constant variance): The red trend line dips slightly in the middle around fitted values 9–11 and rises toward the edges. The spread of standardized residuals is relatively even overall, but slight heteroscedasticity is present due to the clustering of higher variance around fitted values 10 to 12.
+
+
+### 4. Residuals vs Leverage (Influential Observations)
+
+##Observations falling beyond the dashed (Cook's distance) lines (usually values > 0.5 or > 1.0), which indicates extreme influence on the model coefficients: some Observation  has a high leverage value (around `0.21`), meaning it has unusual predictor values, but its standardized residual is relatively small (near `-1`), so it is not unduly distorting the model slope and none of the points cross the critical Cook's distance boundaries (dashed red lines), meaning there are no severely influential points threatening the model's overall stability.
+
+
+### Summary & Recommendations 
+
+##1.Linerarity: satisfied as the residual mean remains close to zero
+
+##2.Normality:Mild Violation as the left-tail skewness caused by extreme negative outliers.
+
+##3.Homoscedasticity : Mostly Satisfied as Minor variance variation across fitted values. 
+##4.Influential Points : Satisfied as No points exceed Cook's distance limits. 
+
+
+
+ ## 3. Polynomial regression
+ 
+ #This tests whether the relationship between a predictor and final grade is curved rather than a straight line.
+
+ # For example, age may have a non-linear relationship with academic performance 
+ 
+ 
+
+```{r}
+
+polynomial_model <- lm(
+  Final_Grade ~ Age + I(Age^2),
+  data = student
+)
+
+summary(polynomial_model)
+```
+## Interpretation: 
+The overall model was statistically significant (F = 5.269, p = 0.0055), explaining approximately 2.62% of the variation in final grades (R² = 0.0262). However, neither Age (p = 0.742) nor Age² (p = 0.867) was individually statistically significant. This indicates that there is insufficient evidence of a significant linear or quadratic relationship between age and final grades and Although the overall model is statistically significant, the squared age term does not provide evidence of a meaningful non-linear relationship. Age alone has very low explanatory power for students' academic performance.
+
+
+
+## 4. Multiple regression with interaction effects
+
+This tests whether the relationship between one predictor and final grade depends on another predictor.
+
+For example, does the relationship between study time and final grade differ according to students' past failures?
+
+```{r}
+
+interaction_model <- lm(
+  Final_Grade ~ Study_Time * Past_Failures +
+    Age + School_Absences + Gender,
+  data = student
+)
+
+summary(interaction_model)
+```
+## Interpretation: 
+The interaction regression model was statistically significant (p < 0.001), explaining 16.53% of the variation in students' final grades. Past failures had a significant negative association with final grades, while male students had significantly higher estimated grades than female students, controlling for other variables. However, the interaction between study time and past failures was not statistically significant, suggesting that the association between study time and academic performance does not significantly differ according to students' past failures. Overall, past academic performance appears to be an important predictor of students' final grades
+
+
+
+## 5. Ridge regression
+
+Ridge regression is useful when you have many predictors and want to reduce the impact of multicollinearity.
+
+It uses regularization to shrink regression coefficients.
+
+
+```{r}
+
+
+install.packages("glmnet")  
+library(glmnet)
+
+x <- model.matrix(
+  G3 ~ .,
+  data = student
+)[, -1]
+
+y <- student$G3
+
+set.seed(123)
+
+ridge_model <- cv.glmnet(
+  x,
+  y,
+  alpha = 0,
+  nfolds = 10
+)
+
+
+plot(ridge_model)
+
+ridge_model$lambda.min
+ridge_model$lambda.1se
+
+min(ridge_model$cvm)
+
+coef(ridge_model, s = "lambda.min")
+
+coef(ridge_model, s = "lambda.1se")
+
+
+```
+```{r}
+
+# Minimum lambda
+ridge_model$lambda.min
+
+# One-standard-error lambda
+ridge_model$lambda.1se
+
+# Minimum cross-validation MSE
+min(ridge_model$cvm)
+
+# Cross-validation RMSE
+sqrt(min(ridge_model$cvm))
+
+```
+
+
+
+## Results for lambda.min
+coef(ridge_model, s = "lambda.min")
+42 x 1 sparse Matrix of class "dgCMatrix"
+                                lambda.min
+(Intercept)                    -0.42420939
+SchoolMS                        0.40820300
+GenderM                         0.20465390
+Age                            -0.17176828
+ResidenceU                      0.14054799
+Family_SizeLE3                  0.08616469
+Parent_StatusT                 -0.20280154
+Mother_Education                0.13195115
+Father_Education               -0.11313128
+Mother_Occupationhealth        -0.03190874
+Mother_Occupationother          0.12189956
+Mother_Occupationservices       0.09509771
+Mother_Occupationteacher       -0.05740627
+Father_Occupationhealth         0.41805122
+Father_Occupationother          0.07194386
+Father_Occupationservices      -0.12469407
+Father_Occupationteacher       -0.03500673
+School_Choice_Reasonhome       -0.16348895
+School_Choice_Reasonother       0.40748255
+School_Choice_Reasonreputation  0.13902916
+Guardianmother                  0.14919242
+Guardianother                  -0.06898527
+Travel_Time                     0.03303904
+Study_Time                     -0.08259392
+Past_Failures                  -0.21935823
+School_Supportyes               0.44457683
+Family_Supportyes               0.12245791
+Paid_Classesyes                 0.14344395
+Extracurricular_Activitiesyes  -0.30344800
+Nursery_Attendanceyes          -0.19891993
+Higher_Education_Intentyes      0.25217367
+Internet_Accessyes             -0.04511773
+Romantic_Relationshipyes       -0.36980550
+Family_Relationship             0.29281980
+Free_Time                       0.04880650
+Social_Outings                 -0.02619826
+Workday_Alcohol                -0.13074176
+Weekend_Alcohol                 0.15118388
+Health_Status                   0.04092636
+School_Absences                 0.04092865
+First_Period_Grade              0.33469964
+Second_Period_Grade             0.76009398
+
+
+## Interpretation: 
+
+Ridge Regression is applied to predict students' final grades using their demographic, family, social, and academic characteristics. A 10-fold cross-validation procedure was used to determine the optimal regularization parameter. The minimum lambda value was 0.414035, while the one-standard-error lambda value was 1.049730. The minimum cross-validation Mean Squared Error (MSE) was 4.188782, corresponding to a Root Mean Squared Error (RMSE) of 2.046651. This indicates that the model's cross-validated prediction error was approximately 2.05 grade points. Overall, Ridge Regression helps control overfitting by shrinking regression coefficients towards zero while retaining predictors in the model. The results suggest that Ridge Regression provides a useful approach for predicting students' final grades.
+
+
+## 6. Lasso regression
+
+Lasso regression can shrink some coefficients to exactly zero, helping select a smaller group of predictors and it will help to know Which variables are most useful for predicting final grades according to the Lasso procedure.
+
+
+```{r}
+
+lasso_model <- cv.glmnet(
+  x, y,
+  alpha = 1
+)
+
+plot(lasso_model)
+
+coef(lasso_model, s = "lambda.min")
+```
+
+
+lasso_model$lambda.min
+lasso_model$lambda.1se
+
+# Minimum cross-validation MSE
+min(lasso_model$cvm)
+
+# Minimum cross-validation RMSE
+sqrt(min(lasso_model$cvm))
+
+# Coefficients at lambda.min
+coef(lasso_model, s = "lambda.min")
+
+# Coefficients at lambda.1se
+coef(lasso_model, s = "lambda.1se")
+
+
+
+```{r}
+
+lasso_model$lambda.min
+lasso_model$lambda.1se
+
+# Minimum cross-validation MSE
+min(lasso_model$cvm)
+
+# Minimum cross-validation RMSE
+sqrt(min(lasso_model$cvm))
+
+# Coefficients at lambda.min
+coef(lasso_model, s = "lambda.min")
+
+# Coefficients at lambda.1se
+coef(lasso_model, s = "lambda.1se")
+
+
+```
+
+## Lasso regression results intepretation
+
+Lasso Regression was applied to predict students' final grades using demographic, family, social, and academic characteristics. Cross-validation produced an optimal lambda value of 0.15955, a minimum Mean Squared Error (MSE) of 3.75588, and a Root Mean Squared Error (RMSE) of 1.93801. At the minimum lambda, eight predictors had non-zero coefficients, including age, father's occupation, past failures, romantic relationship, family relationship, absences, first-period grade, and second-period grade. At the stronger penalty represented by lambda.1se (0.77583), only the first-period and second-period grades remained in the model. This indicates that previous academic performance provides particularly strong predictive information about students' final grades. Overall, Lasso Regression performed variable selection by shrinking less influential coefficients to zero and achieved a slightly lower cross-validation prediction error than Ridge Regression.
+
+ The predictors variables are:1.Family relationship (0.1557	Positive association)
+                              2. Absences	(0.0182	Positive association)
+                              3.First-period grade (G1)	(0.1234	Positive association)
+                              4.Second-period grade (G2) (0.9620	Strong positive association)
+
+
+## 7. Elastic Net regression
+
+Elastic Net combines Ridge and Lasso approaches and will combining two regularization techniques can improve prediction and variable selection.
+
+
+```{r}
+
+elastic_model <- cv.glmnet(
+  x, y,
+  alpha = 0.5
+)
+
+plot(elastic_model)
+
+coef(elastic_model, s = "lambda.min")
+```
+
+
+```{r}
+min(elastic_model$cvm)
+
+# Minimum cross-validation RMSE
+sqrt(min(elastic_model$cvm))
+
+# Coefficients at lambda.min
+coef(elastic_model, s = "lambda.min")
+
+# Coefficients at lambda.1se
+coef(elastic_model, s = "lambda.1se")
+
+```
+
+## Elastic Net Regression Results
+
+
+Elastic Net Regression was applied to predict students' final grades using demographic, family, social, and academic characteristics. The model achieved a minimum cross-validation Mean Squared Error (MSE) of 3.780917 and a Root Mean Squared Error (RMSE) of 1.944458, indicating a prediction error of approximately 1.94 grade points. At the minimum penalty, 15 predictors had non-zero coefficients, while only the first-period and second-period grades remained at the stronger one-standard-error penalty. This demonstrates the model's ability to combine coefficient shrinkage and variable selection. Compared with Ridge and Lasso Regression, Elastic Net achieved better predictive performance than Ridge but slightly lower performance than Lasso. Overall, Elastic Net provides a useful approach for predicting students' final grades while reducing model complexity.
+
+
+
+## 8. Logistic regression: Pass or fail
+
+By creating a binary outcome from Final Grade and it will determine Which student characteristics are associated with a higher or lower probability of passing
+
+For example, define:
+- Pass = Final Grade of 10 or higher.
+- Fail = Final Grade below 10.
+
+
+
+```{r}
+
+student$Pass_Fail <- ifelse(
+  student$G3 >= 10,
+  1, 0
+)
+
+logistic_model <- glm(
+  Pass_Fail ~ age + studytime +
+    failures + absences +
+    romantic + sex,
+  data = student,
+  family = binomial
+)
+
+summary(logistic_model)
+```
+## Logistic regression model interpretation
+
+Logistic regression is used to examine the relationship between students' demographic, academic, and social characteristics and their likelihood of passing. Students who obtained a final grade of 10 or above were classified as having passed, while those scoring below 10 were classified as having failed. The results showed that past failures was the only statistically significant predictor of passing (β = -0.88881, p < 0.001). Its odds ratio of approximately 0.411 indicates that each additional past failure was associated with a 58.9% reduction in the odds of passing, holding other variables constant. Age, study time, absences, romantic relationships, and gender were not statistically significant predictors at the 5% significance level. These findings highlight the importance of students' previous academic performance in predicting their likelihood of passing
+
+
+## 9. Decision tree
+
+Decision trees identify combinations of factors that help predict student performance and it will help to know Which conditions and combinations of student characteristics divide students into groups with different predicted grades
+
+
+```{r}
+
+install.packages("rpart")
+library(rpart)
+
+tree_model <- rpart(
+  G3 ~ age + studytime +
+    failures + absences +
+    romantic + sex,
+  data = student,
+  method = "anova"
+)
+
+plot(tree_model)
+text(tree_model, pretty = 0)
+```
+
+## Regression tree interpretation
+
+A regression decision tree was developed to predict students' final grades (G3) using age, study time, past failures, school absences, romantic relationships, and gender. The results identified past failures as the first splitting variable, indicating its importance in distinguishing students with different predicted academic outcomes. Subsequent splits involved school absences, age, and gender. The terminal nodes provided different predicted final grades for groups of students based on combinations of these characteristics. These findings suggest that previous academic performance and attendance play important roles in distinguishing students' predicted final grades. Overall, the regression tree provides an interpretable approach for understanding how student characteristics are used to predict academic performance
+
+
+## 10. Random forest regression
+
+Random forest combines multiple decision trees to predict numerical outcomes and it help to know which variables are useful for predicting final grades and how well a more flexible model performs
+
+
+
+```{r}
+
+install.packages("randomForest")
+library(randomForest)
+
+set.seed(123)
+
+forest_model <- randomForest(
+  G3 ~ age + Medu+
+    Fedu + studytime +
+    failures + absences +
+    romantic + health +
+    sex + internet,
+  data = student,
+  ntree = 500,
+  importance = TRUE
+)
+
+print(forest_model)
+
+importance(forest_model)
+varImpPlot(forest_model)
+```
+
+## Random forest regression interpretation
+
+Random Forest Regression was applied to predict students' final grades using demographic, family, social, and academic characteristics. Variable importance was evaluated using percentage increase in Mean Squared Error (%IncMSE) and increase in node purity (IncNodePurity). The results identified past failures and school absences as the two most important predictors across both measures. Age, gender, and parental education also contributed to the model's predictions, while internet access and romantic relationships showed relatively low importance. Although the ranking of some variables differed between the two importance measures, both highlighted the importance of students' previous academic performance and school attendance in predicting final grades. Overall, Random Forest provides evidence that these characteristics are useful for predicting students' academic performance.
+
+
+## 11. ANOVA for comparing regression models
+
+```{r}
+
+linear_failures <- lm(
+  G3 ~ failures,
+  data = student
+)
+
+polynomial_failures <- lm(
+  G3 ~ failures + I(failures^2),
+  data = student
+)
+
+anova(
+linear_failures, polynomial_failures)
+
+summary(linear_failures)$adj.r.squared
+summary(polynomial_failures)$adj.r.squared
+
+# Compare AIC
+AIC(linear_failures, polynomial_failures)
+```
+
+
+## Intepretation of ANOVA for comparison regressions
+
+An Analysis of Variance (ANOVA) test was conducted to compare a linear regression model and a quadratic polynomial regression model examining the relationship between students' past failures and final grades. The polynomial model had a lower residual sum of squares (7132.8) than the linear model (7195.7), indicating a slight improvement in model fit after adding the squared term. However, this improvement was not statistically significant at the 5% level (F = 3.4554, p = 0.0638). Therefore, there is insufficient evidence to conclude that the quadratic term significantly improves the prediction of final grades. The linear regression model is consequently preferred because it provides a simpler representation of the relationship without a statistically significant loss of fit
+
+
+## Overall conclusion
+
+Based on all the regression models I have fitted and based of the results found , Lasso Regression is currently the best-performing candidate for predicting students' final grades (G3) as it provided 4 variables for predicting the final grade1 (Second-period grade (G2),First-period grade (G1),Absences and Family relationship
+                              
+
